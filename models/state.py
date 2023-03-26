@@ -14,7 +14,10 @@ class State(BaseModel, Base):
     name = Column(String(128), nullable=False)
 
     if get_env('HBNB_TYPE_STORAGE') == 'db':
-        cities = relationship('City', back_populates='state', cascade='delete')
+        cities = relationship(
+            'City', order_by='City.id',
+            back_populates='state', cascade='delete'
+        )
 
     if get_env('HBNB_TYPE_STORAGE') == 'file':
         @property

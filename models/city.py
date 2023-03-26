@@ -16,4 +16,4 @@ class City(BaseModel, Base):
     name = Column(String(128), nullable=False)
 
     state = relationship('State')
-    places = relationship('Place', back_populates='city')
+    places = relationship('Place', order_by='Place.id', back_populates='city')

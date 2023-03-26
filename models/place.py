@@ -47,11 +47,13 @@ class Place(BaseModel, Base):
 
     if get_env('HBNB_TYPE_STORAGE') == 'db':
         reviews = relationship(
-            'Review', back_populates='place', cascade='delete'
+            'Review', order_by='Review.id',
+            back_populates='place', cascade='delete'
         )
         amenities = relationship(
             'Amenity', secondary=place_amenity,
-            viewonly=False, backref='places'
+            viewonly=False, backref='places',
+            order_by='Amenity.id'
         )
     elif get_env('HBNB_TYPE_STORAGE') == 'file':
         @property
