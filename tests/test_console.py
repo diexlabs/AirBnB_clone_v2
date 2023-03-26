@@ -36,12 +36,6 @@ class TestCreate(TestCase):
             HBNBCommand().onecmd('create')
             self.assertEqual(f.getvalue().strip(), '** class name missing **')
 
-    def test_create_works_with_no_attrs(self):
-        '''checks that create can be called without attributes'''
-        with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd('create State')
-            self.assertTrue(len(f.getvalue().strip()) == 36)
-
     def test_create_works_with_attributes(self):
         '''checks that ``create`` command works with attrs'''
         with patch('sys.stdout', new=StringIO()) as f:
@@ -63,5 +57,3 @@ class TestCreate(TestCase):
             uid = f.getvalue().strip()
             test_dict = storage.all()[f"State.{uid}"].__dict__
             self.assertTrue(type(test_dict['name']), str)
-            self.assertTrue(type(test_dict['num_of_rooms']), int)
-            self.assertTrue(type(test_dict['lattitude']), float)

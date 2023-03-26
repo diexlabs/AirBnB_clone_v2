@@ -15,7 +15,7 @@ class State(BaseModel, Base):
 
     if get_env('HBNB_TYPE_STORAGE') == 'db':
         cities = relationship('City', back_populates='state', cascade='delete')
-    
+
     if get_env('HBNB_TYPE_STORAGE') == 'file':
         @property
         def cities(self):
@@ -23,4 +23,6 @@ class State(BaseModel, Base):
             from models import storage
             from city import City
             cities = storage.all(City)
-            return [city for city in cities.values() if city.state_id == self.id]
+            return [
+                city for city in cities.values() if city.state_id == self.id
+            ]

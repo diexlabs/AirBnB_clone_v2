@@ -12,8 +12,8 @@ class DBStorage:
     __engine = None
     __session = None
 
-
     def __init__(self) -> None:
+        '''initializes the storage class'''
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
             get_env('HBNB_MYSQL_USER'),
             get_env('HBNB_MYSQL_PWD'),
@@ -33,17 +33,20 @@ class DBStorage:
         from models.city import City
         from models.amenity import Amenity
         from models.review import Review
-        __models = [User, State, City, Amenity, Place, Review]
+        models = [User, State, City, Amenity, Place, Review]
 
         if cls:
             objs = self.__session.query(cls).all()
         else:
-            objs = self.__session.query(*__models)
-        
-        return {f'{obj.__class__.__name__}.{obj.id}': obj 
+            objs = self.__session.query(models[0]).all()
+            for model in models[1:]:
+                objs.extend(self.__session.query(model).all())
+
+        return {
+            f'{obj.__class__.__name__}.{obj.id}': obj
             for obj in objs
         }
-        
+
     def new(self, obj):
         '''adds a new obj to database'''
         self.__session.add(obj)
