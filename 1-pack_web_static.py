@@ -10,7 +10,7 @@ def do_pack():
 
     try:
         local("mkdir -p versions")
-        run = local(f"tar -cvzf versions/{filename} web_static")
+        run = local(f"tar -cvzf versions/{filename} web_static/")
 
         return f'versions/{filename}'
     except Exception:
