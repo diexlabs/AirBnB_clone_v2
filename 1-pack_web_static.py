@@ -10,12 +10,8 @@ def do_pack():
 
     try:
         local("mkdir -p versions")
-
-        print(f'Packing web_static to versions/{filename}')
         run = local(f"tar -cvzf versions/{filename} web_static")
 
-        if run.failed:
-            return None
         return f'versions/{filename}'
     except Exception:
         return None
