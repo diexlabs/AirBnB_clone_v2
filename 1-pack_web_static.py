@@ -20,5 +20,5 @@ def do_pack():
         if run.failed:
             return None
         return filename
-    except:
+    except Exception:
         return None
