@@ -1,31 +1,27 @@
 #!/usr/bin/env bash
-# sets up a web server for deployment
-#+ of static files
+# Bash script that sets up web servers for the deployment of web_static
+sudo apt-get update
+sudo apt-get -y install nginx
+sudo ufw allow 'Nginx HTTP'
 
-sudo apt-get update -y && sudo apt-get install nginx -y;
+sudo mkdir -p /data/
+sudo mkdir -p /data/web_static/
+sudo mkdir -p /data/web_static/releases/
+sudo mkdir -p /data/web_static/shared/
+sudo mkdir -p /data/web_static/releases/test/
+sudo touch /data/web_static/releases/test/index.html
+sudo echo "<html>
+  <head>
+  </head>
+  <body>
+    Holberton School
+  </body>
+</html>" | sudo tee /data/web_static/releases/test/index.html
 
-root=/data/web_static;
+sudo ln -s -f /data/web_static/releases/test/ /data/web_static/current
 
-mkdir -p "$root/shared";
-mkdir -p "$root/releases/test";
-echo 'Hello World' > "$root/releases/test/index.html";
+sudo chown -R ubuntu:ubuntu /data/
 
-ln -sf -T "$root/releases/test/" "$root/current";
+sudo sed -i '/listen 80 default_server/a location /hbnb_static { alias /data/web_static/current/;}' /etc/nginx/sites-enabled/default
 
-sudo chown -R ubuntu:ubuntu /data
-
-nginxFile=/etc/nginx/sites-available;
-
-for config in web default
-do
-	file="$nginxFile/$config";
-	if [ -e "$file" ]
-	then
-		# remove hbnb_static location if it exitst
-		sed -i '/^\s*location \/hbnb_static/,/}/d' "$nginxFile/$config";
-
-		sed -i "/^\s*location \/ {/i \\\tlocation /hbnb_static {\n\t\talias /data/web_static/current;\n\t}" "$nginxFile/$config";
-	fi
-done
-
-nginx -s reload;
+sudo service nginx restart
