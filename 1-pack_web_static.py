@@ -7,6 +7,7 @@ from datetime import datetime
 from fabric.context_managers import lcd
 from fabric.operations import local
 
+
 def do_pack():
     '''packs a folder into an archive file'''
     d = datetime.now()
@@ -21,7 +22,7 @@ def do_pack():
 
     print(f'Packing web_static to versions/{filename}')
     run = local(f"tar -cvzf versions/{filename} web_static")
-    
+
     if run.failed:
         return None
     else:
