@@ -16,6 +16,6 @@ def do_pack():
 
         if run.failed:
             return None
-        return filename
+        return f'versions/{filename}'
     except Exception:
         return None
