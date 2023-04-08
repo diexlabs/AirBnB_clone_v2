@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+'''packs web_static folder into an archive'''
+
 import os
 from datetime import datetime
 from fabric.api import local
