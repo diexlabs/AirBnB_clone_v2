@@ -8,28 +8,32 @@ env.key = "/home/trevor/.ssh/school"
 
 
 def do_deploy(archive_path):
-    """Fabric script that distributes
-    an archive to your web server"""
-
+    """A script that deploys
+    static files to a web server"""
+    
     if not path.exists(archive_path):
         return False
     try:
-        tgzfile = archive_path.split("/")[-1]
-        print(tgzfile)
-        filename = tgzfile.split(".")[0]
+        filename = archive_path.rsplit("/", 1)[-1]
         print(filename)
-        pathname = "/data/web_static/releases/" + filename
-        put(archive_path, '/tmp/')
-        run("mkdir -p /data/web_static/releases/{}/".format(filename))
+        base = filename.split(".")[0]
+        print(base)
+
+        put(archive_path, f"/tmp/")
+        run("mkdir -p /data/web_static/releases/{}/".format(base))
         run("tar -zxvf /tmp/{} -C /data/web_static/releases/{}/"
-            .format(tgzfile, filename))
-        run("rm /tmp/{}".format(tgzfile))
-        run("mv /data/web_static/releases/{}/web_static/*\
-            /data/web_static/releases/{}/".format(filename, filename))
-        run("rm -rf /data/web_static/releases/{}/web_static".format(filename))
+            .format(filename, base))
+        run("rm -rf /tmp/{}".format(filename))
+        run(
+            "rsync -a /data/web_static/releases/{}/web_static/*\
+             /data/web_static/releases/{}/".format(
+                base, base
+            )
+        )
+        run("rm -rf /data/web_static/releases/{}/web_static".format(base))
         run("rm -rf /data/web_static/current")
-        run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
-            .format(filename))
+        run("ln -s /data/web_static/releases/{} /data/web_static/current"
+            .format(base))
         return True
     except Exception as e:
         return False
