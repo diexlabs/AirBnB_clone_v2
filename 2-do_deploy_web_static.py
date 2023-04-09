@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from fabric.api import run, put, local, env
+from fabric.api import run, put, lc, env
 from os import path
 
 env.hosts = ["3.94.211.128", "52.91.123.252"]
@@ -8,32 +8,28 @@ env.key = "/home/trevor/.ssh/school"
 
 
 def do_deploy(archive_path):
-    """A script that deploys
-    static files to a web server"""
-    
+    """Fabric script that distributes
+    an archive to your web server"""
+
     if not path.exists(archive_path):
         return False
     try:
-        filename = archive_path.rsplit("/", 1)[-1]
+        tgzfile = archive_path.split("/")[-1]
+        print(tgzfile)
+        filename = tgzfile.split(".")[0]
         print(filename)
-        base = filename.split(".")[0]
-        print(base)
-
-        put(archive_path, f"/tmp/")
-        run("mkdir -p /data/web_static/releases/{}/".format(base))
+        pathname = "/data/web_static/releases/" + filename
+        put(archive_path, '/tmp/')
+        run("mkdir -p /data/web_static/releases/{}/".format(filename))
         run("tar -zxvf /tmp/{} -C /data/web_static/releases/{}/"
-            .format(filename, base))
-        run("rm -rf /tmp/{}".format(filename))
-        run(
-            "rsync -a /data/web_static/releases/{}/web_static/*\
-             /data/web_static/releases/{}/".format(
-                base, base
-            )
-        )
-        run("rm -rf /data/web_static/releases/{}/web_static".format(base))
+            .format(tgzfile, filename))
+        run("rm /tmp/{}".format(tgzfile))
+        run("mv /data/web_static/releases/{}/web_static/*\
+            /data/web_static/releases/{}/".format(filename, filename))
+        run("rm -rf /data/web_static/releases/{}/web_static".format(filename))
         run("rm -rf /data/web_static/current")
-        run("ln -s /data/web_static/releases/{} /data/web_static/current"
-            .format(base))
+        run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
+            .format(filename))
         return True
     except Exception as e:
         return False
