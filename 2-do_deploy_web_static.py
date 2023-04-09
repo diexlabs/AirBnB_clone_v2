@@ -8,7 +8,9 @@ env.key = "/home/trevor/.ssh/school"
 
 
 def do_deploy(archive_path):
-    """A script that deploys static files to a web server"""
+    """A script that deploys
+    static files to a web server"""
+    
     if not path.exists(archive_path):
         return False
     try:
