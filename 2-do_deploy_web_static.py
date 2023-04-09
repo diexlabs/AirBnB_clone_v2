@@ -6,8 +6,8 @@ env.hosts = [
     '3.94.211.128',
     '52.91.123.252'
 ]
-env.user = 'ubuntu'
-env.key = '/home/trevor/.ssh/school'
+# env.user = 'ubuntu'
+# env.key = '/home/trevor/.ssh/school'
 
 
 def do_deploy(archive_path):
