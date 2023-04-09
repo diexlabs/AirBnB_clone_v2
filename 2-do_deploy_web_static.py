@@ -1,22 +1,21 @@
 #!/usr/bin/python3
 from fabric.api import run, put, env
-import os
+from os import path
 
-env.hosts = [
-    '3.94.211.128',
-    '52.91.123.252'
-]
-# env.user = 'ubuntu'
-# env.key = '/home/trevor/.ssh/school'
+env.hosts = ['3.94.211.128', '52.91.123.252']
+env.user = 'ubuntu'
+env.key = '/home/trevor/.ssh/school'
 
 
 def do_deploy(archive_path):
-    """ A script that deploys static files to a web server"""
-    if not os.path.exists(archive_path):
+    """A script that deploys static files to a web server"""
+    if not path.exists(archive_path):
         return False
     try:
         filename = archive_path.rsplit('/', 1)[-1]
+        print(filename)
         base = filename.split('.')[0]
+        print(base)
 
         put(archive_path, f'/tmp/{filename}')
         run("mkdir -p /data/web_static/releases/{}/".format(base))
