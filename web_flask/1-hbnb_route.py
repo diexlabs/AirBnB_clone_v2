@@ -12,6 +12,7 @@ def index():
     """returns the index page of the application"""
     return "Hello HBNB!"
 
+
 @app.route('/hbnb')
 def hbnb():
     """a route of the server"""
