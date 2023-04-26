@@ -12,19 +12,16 @@ class State(BaseModel, Base):
     __tablename__ = 'states'
 
     name = Column(String(128), nullable=False)
+    cities = relationship(
+        'City', order_by='City.id', back_populates='state', cascade='delete'
+    )
 
-    if get_env('HBNB_TYPE_STORAGE') == 'db':
-        cities = relationship(
-            'City', order_by='City.id',
-            back_populates='state', cascade='delete'
-        )
-
-    if get_env('HBNB_TYPE_STORAGE') == 'file':
+    if get_env('HBNB_TYPE_STORAGE') != 'db':
         @property
         def cities(self):
             '''returns a list of cities in ``self``'''
             from models import storage
-            from models.city import City
+            from city import City
             cities = storage.all(City)
             return [
                 city for city in cities.values() if city.state_id == self.id

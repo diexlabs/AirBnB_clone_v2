@@ -55,7 +55,7 @@ class Place(BaseModel, Base):
             viewonly=False, backref='places',
             order_by='Amenity.id'
         )
-    elif get_env('HBNB_TYPE_STORAGE') == 'file':
+    else:
         @property
         def reviews(self):
             '''reviews property for file storage'''
